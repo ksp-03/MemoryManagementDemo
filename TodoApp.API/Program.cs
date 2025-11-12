@@ -1,4 +1,5 @@
 
+using TodoApp.API.Middlewares;
 using TodoApp.BLL;
 using TodoApp.DAL;
 
@@ -21,6 +22,8 @@ namespace TodoApp.API
             builder.Services.AddScoped<IUnitOfWork, UnitofWork>();
             builder.Services.AddSingleton(new SqlConnectionFactory(
                 builder.Configuration.GetConnectionString("TodoDb")));
+
+            builder.Services.AddTransient<HttpRequestMiddleware>();
             var app = builder.Build();
 
 
@@ -30,6 +33,7 @@ namespace TodoApp.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseMiddleware<HttpRequestMiddleware>();
 
             app.UseHttpsRedirection();
 
